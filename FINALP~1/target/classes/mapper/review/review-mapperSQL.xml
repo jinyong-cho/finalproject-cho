@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="review">
+	
+	<select id="totalReview" resultType="_int">
+	select count(*) as cnt from review
+	</select>
+	
+	<select id="searchTotalReview" parameterType="r" resultType="_int">
+	select count(*) as cnt from review where 
+	<if test="select!=null and select.equals('작성자')">
+		writer_id like '%'||#{search}||'%'
+	</if>
+	<if test="select!=null and select.equals('제목')">
+		review_title like '%'||#{search}||'%'
+	</if>
+	</select>
+	
+	<select id="selectReviewList" parameterType="r" resultType="r">
+	select
+		review_no as reviewNo,
+		review_title as reviewTitle,
+		writer_id as writerId,
+		review_content as reviewContent,
+		review_views as reviewViews,
+		review_likes as reviewLikes,
+		review_ori_filename as reviewOriFileName,
+		review_re_filename as reviewReFileName,
+		review_reg_date as reviewRegDate
+	from (select rownum as num, r.* from(select*from review
+	<if test="select!=null and select.equals('작성자')">
+		where writer_id like '%'||#{search}||'%'
+	</if>
+	<if test="select!=null and select.equals('제목')">
+		where review_title like '%'||#{search}||'%'
+	</if>
+		order by review_reg_date desc)r)
+		where num between #{start} and #{end}
+	</select>
+	
+	<insert id="writeReview" parameterType="r">
+	insert into review values(seq_review_no.nextval,#{reviewTitle},#{writerId},#{reviewContent},#{reviewViews},#{reviewLikes},#{reviewOriFileName},#{reviewReFileName},sysdate)
+	</insert>
+	
+	
+	<select id="detailReview" parameterType="_int" resultType="r">
+	select
+		num as countNo,
+		review_no as reviewNo,
+		review_title as reviewTitle,
+		writer_id as writerId,
+		review_content as reviewContent,
+		review_views as reviewViews,
+		review_likes as reviewLikes,
+		review_ori_filename as reviewOriFileName,
+		review_re_filename as reviewReFileName,
+		review_reg_date as reviewRegDate
+	from (select rownum as num, r.* from (select * from review order by review_reg_date desc )r) where review_no=#{_parameter}
+	</select>
+
+
+	<update id="countView" parameterType="r">
+	update review set review_views=#{reviewViews} where review_no=#{reviewNo}
+	</update>
+	
+	
+	<select id="warpReview" parameterType="_int" resultType="r">
+	 select
+	 	num as countNo,
+		review_no as reviewNo,
+		review_title as reviewTitle,
+		writer_id as writerId,
+		review_content as reviewContent,
+		review_views as reviewViews,
+		review_likes as reviewLikes,
+		review_ori_filename as reviewOriFileName,
+		review_re_filename as reviewReFileName,
+		review_reg_date as reviewRegDate
+    from (select rownum as num, r.* from (select * from review order by review_reg_date desc )r )
+    where num=#{countNo}
+	
+	</select>
+
+
+
+	<select id="maxCountNo" resultType="r">
+		select
+        	max(num) as countNo
+		from (select rownum as num, r.* from (select * from review order by review_reg_date desc )r)
+	</select>
+	
+	<delete id="deleteReview" parameterType="_int">
+	delete from review where review_no=#{_parameter}
+	</delete>
+	
+	<update id="updateReview" parameterType="r">
+	update review set review_title=#{reviewTitle}, review_content=#{reviewContent}, review_ori_filename=#{reviewOriFileName}, review_re_filename=#{reviewReFileName} where review_no=#{reviewNo}
+	</update>
+	
+	
+	<insert id="insertComment" parameterType="rc">
+	insert into review_Comment values(seq_reviewComment_no.nextval, #{writerId}, #{commentContent},sysdate, #{reviewNo})
+	
+	</insert>
+	
+	<select id="commentView" parameterType="_int" resultType="rc">
+	select 
+		comment_no as CommentNo,
+		writer_id as writerId,
+		comment_content as commentContent,
+		comment_reg_date as commentRegDate,
+		review_no as reviewNO
+	from review_Comment 
+	where review_no=#{reviewNo} ORDER BY COMMENT_NO DESC
+	</select>
+	
+	<delete id="deleteComment" parameterType="_int">
+	delete 
+	from review_comment where comment_no=#{commentNo}
+	</delete>
+	
+	<select id="selectOneLikes" parameterType="rl" resultType="rl">
+	select
+		member_id as memberId,
+		review_no as reviewNo
+	from review_Like where member_id=#{memberId} and review_no=#{reviewNo}
+	</select>
+	
+	<delete id="deleteLikeMemberInfo" parameterType="rl">
+	delete
+	from review_Like where review_no=#{reviewNo} and member_id=#{memberId}
+	</delete>
+	
+	<update id="deleteLikes" parameterType="rl">
+	update review set review_likes = review_likes-1 where review_no=#{reviewNo}
+	</update>
+	
+	<insert id="insertLikeMemberInfo" parameterType="rl">
+	insert into review_like values(#{reviewNo},#{memberId})
+	</insert>
+	
+	<update id="updateLikes" parameterType="rl">
+	update review set review_likes = review_likes+1 where review_no=#{reviewNo}
+	</update>
+	
+	<select id="selectReviewReviewNo" parameterType="r" resultType="_int">
+		SELECT
+			REVIEW_NO AS reviewNo
+		FROM REVIEW
+		WHERE WRITER_ID=#{writerId } AND REVIEW_CONTENT=#{reviewContent } AND REVIEW_TITLE=#{reviewTitle }
+	</select>
+	
+	<insert id="insertCommentPhoto" parameterType="org.kh.review.model.vo.ReviewPhoto">
+		INSERT INTO REVIEW_PHOTO VALUES(#{reviewNo}, #{photoName})
+	</insert>
+	
+	<select id="selectReviewNoPhotoSearch" parameterType="_int" resultType="String">
+		SELECT 
+			PHOTO_NAME 
+		FROM REVIEW_PHOTO
+		WHERE REVIEW_NO=#{_parameter }
+	</select>
+	
+	<delete id="contentPhotoRemove" parameterType="string">
+		DELETE FROM REVIEW_PHOTO
+		WHERE PHOTO_NAME = #{_parameter}
+	</delete>
+	
+	<select id="searchProfile" parameterType="string" resultType="string">
+		SELECT
+			REVIEW_RE_FILENAME
+		FROM REVIEW WHERE WRITER_ID = #{_parameter}
+	</select>
+	
+	<select id="searchContentList" parameterType="string" resultType="string">
+		SELECT
+			REVIEW_CONTENT
+		FROM REVIEW WHERE WRITER_ID = #{_parameter}
+	</select>
+</mapper>

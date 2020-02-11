@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="notice">
+
+   <select id="totalNotice" resultType="_int">
+   select count(*) as cnt from notice
+   </select>
+   
+   <select id="searchTotalNotice" parameterType="n" resultType="_int">
+   select count(*) as cnt from notice where 
+   <if test="select!=null and select.equals('작성자')">
+      writer_id like '%'||#{search}||'%'
+   </if>
+   <if test="select!=null and select.equals('제목')">
+      notice_title like '%'||#{search}||'%'
+   </if>
+   </select>
+   
+   <select id="selectNoticeList" parameterType="n" resultType="n">
+   select
+      notice_no as noticeNo,
+      notice_title as noticeTitle,
+      writer_id as writerId,
+      notice_content as noticeContent,
+      notice_view as noticeView,
+      notice_ori_filename as noticeOriFileName,
+      notice_re_filename as noticeReFileName,
+      notice_reg_date as noticeRegDate
+   from (select rownum as num, n.* from (select * from notice 
+   <if test="select!=null and select.equals('작성자')">
+      where writer_id like '%'||#{search}||'%'
+   </if>
+   <if test="select!=null and select.equals('제목')">
+      where notice_title like '%'||#{search}||'%'
+   </if>
+      order by notice_reg_date desc)n) 
+       where num between #{start} and #{end}
+   
+   
+   </select>
+   
+   <select id="detailNotice" parameterType="_int" resultType="n">
+   select
+      num as countNo,
+      notice_no as noticeNo,
+      notice_title as noticeTitle,
+      writer_id as writerId,
+      notice_content as noticeContent,
+      notice_view as noticeView,
+      notice_ori_filename as noticeOriFileName,
+      notice_re_filename as noticeReFileName,
+      notice_reg_date as noticeRegDate
+   from (select rownum as num, n.* from (select * from notice order by notice_reg_date desc )n) where notice_no=#{_parameter}
+   </select>
+   
+   <insert id="writeNotice" parameterType="n">
+   insert into notice values(seq_notice_no.nextval, #{noticeTitle}, #{writerId}, #{noticeContent}, default , #{noticeOriFileName}, #{noticeReFileName}, sysdate)
+   </insert>
+   
+   <update id="updateNotice" parameterType="n">
+   update notice set notice_title = #{noticeTitle}, notice_content = #{noticeContent}, notice_ori_filename=#{noticeOriFileName}, notice_re_filename=#{noticeReFileName} where notice_no=#{noticeNo}
+   </update>
+   
+   <delete id="deleteNotice" parameterType="_int">
+   delete from notice where notice_no=#{_parameter}
+   </delete>
+   
+   <update id="countView" parameterType="n">
+   update notice set notice_view=#{noticeView} where notice_no=#{noticeNo}
+   </update>
+   
+   
+   <select id="warpNotice" parameterType="_int" resultType="n">
+    select
+      num as countNo,
+      notice_no as noticeNo,
+      notice_title as noticeTitle,
+      writer_id as writerId,
+      notice_content as noticeContent,
+      notice_view as noticeView,
+      notice_ori_filename as noticeOriFileName,
+      notice_re_filename as noticeReFileName,
+      notice_reg_date as noticeRegDate
+    from (select rownum as num, n.* from (select * from notice order by notice_reg_date desc )n )
+    where num=#{countNo}
+   
+   </select>
+   
+   <select id="maxCountNo" resultType="n">
+      select
+           max(num) as countNo
+      from (select rownum as num, n.* from (select * from notice order by notice_reg_date desc )n)
+   </select>
+   
+   <select id="selectNoticeNoticeNo" parameterType="n" resultType="_int">
+      SELECT
+         NOTICE_NO AS noticeNo
+      FROM NOTICE
+      WHERE WRITER_ID=#{writerId } AND NOTICE_CONTENT=#{noticeContent } AND NOTICE_TITLE=#{noticeTitle }
+         
+   </select>
+   
+   <insert id="insertCommentPhoto" parameterType="org.kh.notice.model.vo.NoticePhoto">
+      INSERT INTO NOTICE_PHOTO VALUES(#{noticeNo}, #{photoName})
+   </insert>
+   
+   <select id="selectNoticeNoPhotoSearch" parameterType="_int" resultType="String">
+      SELECT 
+         PHOTONAME 
+      FROM NOTICE_PHOTO
+      WHERE NOTICE_NO=#{_parameter }
+   </select>
+   
+   <delete id="contentPhotoRemove" parameterType="string">
+      DELETE FROM NOTICE_PHOTO
+      WHERE PHOTONAME = #{_parameter}
+   </delete>
+   
+   <select id="updatePageNotice" parameterType="_int" resultType="n">
+      SELECT
+          notice_no as noticeNo,
+         notice_title as noticeTitle,
+         writer_id as writerId,
+         notice_content as noticeContent,
+         notice_view as noticeView,
+         notice_ori_filename as noticeOriFileName,
+         notice_re_filename as noticeReFileName,
+         notice_reg_date as noticeRegDate
+      FROM NOTICE 
+      WHERE NOTICE_NO=#{_parameter}
+   </select>
+</mapper>

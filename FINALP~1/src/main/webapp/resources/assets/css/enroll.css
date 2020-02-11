@@ -1,0 +1,69 @@
+#formDiv{
+    border: 1px solid rgba(179, 179, 179, 0.171);
+    border-radius: 8px;
+    width: 1200px;
+    height: 750px;
+    margin:  auto;
+    background-color: rgba(31, 31, 31, 0.041)
+    
+   
+}
+
+button{
+    color: rgba(0, 0, 0, 0.74);
+    height: 40px;
+    border-radius:8px;
+    background-color: rgba(46, 46, 46, 0.349);
+}
+
+.filelabel label { 
+    display: inline-block; padding: .5em .75em; 
+    color: #999; font-size: inherit;
+    line-height: normal;
+    vertical-align: middle; 
+    background-color: #fdfdfd; 
+    cursor: pointer; 
+    border: 1px solid #ebebeb;
+    border-bottom-color: #e2e2e2;
+    border-radius: .25em; }
+
+.filelabel input[type="file"] {
+    position: absolute; 
+    width: 1px; height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip:rect(0,0,0,0);
+    border: 0;}
+#formback{
+    
+    padding: 5%;
+    margin: auto;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: bottom;
+
+}
+.ui-datepicker-trigger {
+    display:none;
+ }
+
+#formarea1{
+width: 50%;
+display: inline-block;
+float: left;
+margin: auto;
+margin-top: 3%;
+border-right: 1px solid rgba(128, 128, 128, 0.329);
+}
+#formarea2{
+    margin-top:7%;
+    width: 50%;
+    height: 100%;
+    display: inline-block;
+   
+}
+.checkspan{
+	color:rgba(255, 0, 0, 0.55);
+	margin-left: 89px;
+}

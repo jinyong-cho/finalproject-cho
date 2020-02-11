@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
+<configuration>
+
+<settings>
+		<setting name ="jdbcTypeForNull" value="NULL"/>
+</settings>
+
+<typeAliases >
+	<typeAlias type="org.kh.websocket.model.vo.ChatDto" alias="cd"/>
+	<typeAlias type="org.kh.websocket.model.vo.ChatMemberDto" alias="cmd"/>
+	<typeAlias type="org.kh.message.model.vo.SendMessage" alias="sm"/>
+	<typeAlias type="org.kh.message.model.vo.ReciveMessage" alias="rm"/>
+	<typeAlias type="org.kh.member.model.vo.Mystyle" alias="ms"/>
+	<typeAlias type="org.kh.member.model.vo.MySelfTest" alias="mst"/>
+	<typeAlias type="org.kh.member.model.vo.Idealtype" alias="i"/>
+	<typeAlias type="org.kh.member.model.vo.Member" alias="m"/>
+	<typeAlias type="org.kh.notice.model.vo.Notice" alias="n"/>
+	<typeAlias type="org.kh.datecourse.model.vo.DateCourse" alias="dc"/>
+	<typeAlias type="org.kh.review.model.vo.Review" alias="r"/>
+	<typeAlias type="org.kh.review.model.vo.ReviewComment" alias="rc"/>
+	<typeAlias type="org.kh.review.model.vo.ReviewLike" alias="rl"/>
+	<typeAlias type="org.kh.message.model.vo.Messagepaging" alias="mp"/>
+	<typeAlias type="org.kh.reportBoard.model.vo.ReportBoard" alias="rb"/>
+</typeAliases>
+</configuration>

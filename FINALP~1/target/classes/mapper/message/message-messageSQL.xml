@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="message">
+
+	<insert id="sendMessage" parameterType="sm" >
+	INSERT INTO SEND_MESSAGE VALUES(
+	MESSAGE_SEQ.NEXTVAL,
+	#{sendId},
+	#{reciveId},
+	#{content}
+	)
+	
+	</insert>
+	<insert id="reciveMessage" parameterType="rm" >
+	INSERT INTO RECIVE_MESSAGE VALUES (
+	MESSAGE_SEQ.NEXTVAL,
+	#{reciveId},
+	#{sendId},
+	#{content}
+	) 
+	</insert>
+ 
+ <select id="reciveAll" parameterType="mp" resultType="rm">
+ 	
+ select * from(
+ select rownum as num,RECIVE_MESSAGE.* from(
+ select 
+RECIVE_NO as reciveNo,
+ 	RECIVE_ID as reciveId,
+ 	SEND_ID as sendId,
+ 	CONTENT as content
+ from RECIVE_MESSAGE WHERE recive_Id=#{memberId} order by RECIVE_NO desc)RECIVE_MESSAGE
+ )
+ where num between #{start} and #{end}  
+ 	 
+ </select>
+ 
+ <insert id="reciveMessageRecive" parameterType="rm">
+ INSERT INTO RECIVE_MESSAGE VALUES(
+ MESSAGE_SEQ.NEXTVAL,
+	#{reciveId},
+	#{sendId},
+	#{content}
+	)
+</insert>
+
+<select id="reciveClick" parameterType="_int" resultType="rm" >
+SELECT 
+	RECIVE_NO as reciveNo,
+ 	RECIVE_ID as reciveId,
+ 	SEND_ID as sendId,
+ 	CONTENT as content
+ 	 FROM RECIVE_MESSAGE
+ 	 WHERE RECIVE_NO=#{reciveNo }
+</select>
+
+<delete id="deleteMessage" parameterType="_int">
+DELETE FROM RECIVE_MESSAGE WHERE RECIVE_NO=#{reciveNo}
+</delete>
+
+<select id="sendAll" parameterType="mp" resultType="sm">
+
+ select * from(
+ select rownum as num,SEND_MESSAGE.* from(
+ select 
+SEND_NO as sendNo,
+ 	SEND_ID as sendId,
+ 	RECIVE_ID as reciveId,
+ 	CONTENT as content
+ from SEND_MESSAGE WHERE SEND_ID=#{memberId} order by SEND_NO desc)SEND_MESSAGE
+ )
+ where num between #{start} and #{end} 
+ 
+ 
+</select>
+
+<delete id="deleteMessage2" parameterType="String">
+DELETE FROM SEND_MESSAGE WHERE CONTENT=#{content}
+</delete>
+
+<insert id="sendMessageSend"  parameterType="sm">
+ INSERT INTO SEND_MESSAGE VALUES(
+ MESSAGE_SEQ.NEXTVAL,
+	#{sendId},
+	#{reciveId},
+	#{content}
+	)
+</insert>
+
+<select id="totalcount" parameterType="string" resultType="_int">
+ SELECT COUNT(*)
+ FROM RECIVE_MESSAGE WHERE RECIVE_ID=#{_parameter}
+</select>
+
+<select id="totalcount2" parameterType="string" resultType="_int">
+ SELECT COUNT(*)
+ FROM SEND_MESSAGE WHERE SEND_ID=#{_parameter}
+</select>
+
+
+</mapper>

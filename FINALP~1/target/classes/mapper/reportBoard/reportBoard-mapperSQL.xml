@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="ReportBoard">
+	<insert id="insertReport" parameterType="rb">
+		insert into report_board
+		values(#{reportId},#{reportedId},#{commentNo},#{reportedComment},#{reportContent},
+		#{reportCount},sysdate
+		)
+	</insert>
+	
+	
+	<select id="reportBoard" parameterType="map" resultType="rb">
+	select
+	report_id as reportId,
+	reported_id as reportedId,
+	comment_no as commentNo,
+	reported_comment as reportedComment,
+	report_content as reportContent,
+	report_count as reportCount,
+	reg_date as regDate
+	from (select rownum as num, rb.*from(select*from report_board
+	order by reg_date desc)rb )
+	where num between #{start} and #{end}
+	</select>
+	
+	<select id="totalBoardCount" resultType="int">
+	select count(*) as cnt
+		from report_board
+	
+	</select>
+	<select id="reportSearch" parameterType="org.kh.reportBoard.model.vo.ReportSearch" resultType="rb">
+	select * from
+	(select rownum as num,rb.*
+	from
+		(select
+	report_id as reportId,
+	reported_id as reportedId,
+	comment_no as commentNo,
+	reported_comment as reportedComment,
+	report_content as reportContent,
+	report_count as reportCount,
+	reg_date as regDate
+	from report_board
+	
+	<if test="type.equals('reportedId')">
+	where reported_id like '%'||#{keyword}||'%'
+	</if>
+	<if test="type.equals('reportId')">
+	where report_id like '%'||#{keyword}||'%'
+	</if>
+	order by reg_date desc)rb
+	)
+	where num between #{start} and #{end}
+
+	</select>
+	
+		<select id="reportSearchCount" parameterType="rb" resultType="_int">
+		select count(*) from report_board
+		<choose>
+			<when test="type.equals('reportedId')">
+				where reported_id like '%'||#{keyword}||'%'
+			</when>
+			<when test="type.equals('reportId')">
+				where report_id like '%'||#{keyword}||'%'
+			</when>
+		</choose>
+	</select>
+	
+	<insert id="insertReviewReport" parameterType="org.kh.reportBoard.model.vo.ReviewReport">
+		INSERT INTO REVIEW_REPORT VALUES(#{reportId}, #{reviewWriterId}, #{reviewNo}, SYSDATE, #{reportComment})
+	</insert> 
+	
+	<select id="reviewReportBoard" resultType="org.kh.reportBoard.model.vo.ReviewReport">
+		SELECT
+			REPORT_ID AS reportId,
+			REVIEW_WRITER_ID AS reviewWriterId,
+			REPORT_COMMENT AS reportComment,
+			REG_DATE AS regDate,
+			REVIEW_NO AS reviewNo
+		FROM REVIEW_REPORT
+	</select>
+	
+</mapper>

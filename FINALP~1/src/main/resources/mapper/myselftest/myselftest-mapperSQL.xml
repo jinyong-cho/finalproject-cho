@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mySelfTest">
+    <insert id="insertMySelfTest" parameterType="mst">
+        insert into myselftest values(
+        #{yn01},
+        #{yn02},
+        #{yn03},
+        #{yn04},
+        #{yn05},
+        #{yn06},
+        #{yn07},
+        #{yn08},
+        #{yn09},
+        #{yn10},
+        #{yn11},
+        #{yn12},
+        #{yn13},
+        #{yn14},
+        #{yn15},
+        #{yn16},
+        #{yn17},
+        #{yn18},
+        #{yn19},
+        #{yn20},
+        #{yn21},
+        #{yn22},
+        #{yn23},
+        #{yn24},
+        #{yn25},
+        #{yn26},
+        #{yn27},
+        #{yn28},
+        #{yn29},
+        #{yn30},
+        #{yn31},
+        #{yn32},
+        #{yn33},
+        #{yn34},
+        #{yn35},
+        #{userName},
+        #{userPhone},
+        #{gender},
+        #{addr},
+        #{birth},
+        #{email}
+        )
+    </insert>
+
+</mapper>

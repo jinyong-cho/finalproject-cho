@@ -1,0 +1,17 @@
+#loveTestWrap{
+	width: 1200px;
+	margin: auto;
+}
+#selectTest{
+	float:left;
+	text-align:center;
+	width: 300px;
+	height: 100%;
+	margin: 3%;
+	line-height: 70px;
+	font-family: cursive;
+	font-size: 30px;
+}
+.list-group>a{
+	height: 10%;
+}

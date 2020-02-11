@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="dcourse">
+
+	<insert id="insertDateCourse" parameterType="dc">
+		INSERT INTO DATECOURSE VALUES(
+		DATECOURSE_SEQ.NEXTVAL,
+		#{dcTitle},
+		#{writerId},
+		#{dcContent},
+		#{dcArea},
+		#{dcCash},
+		DEFAULT,
+		#{dcPlace},
+		#{dcOriPhotoName},
+		#{dcRePhotoName},
+		DEFAULT,
+		SYSDATE,
+		#{dcType}
+		)
+	</insert>
+
+	<select id="selectAllListCourse" parameterType="org.kh.datecourse.model.vo.CheckSearchInfo"
+		resultType="dc">
+
+		SELECT
+		DC_NO as dcNo,
+		DC_TITLE as dcTitle,
+		WRITER_ID as writerId,
+		DC_CONTENT as dcContent,
+		DC_AREA as dcArea,
+		DC_CASH as dcCash,
+		DC_VIEWS as dcViews,
+		DC_PLACE as dcPlace,
+		DC_ORI_PHOTONAME as dcOriPhotoName,
+		DC_RE_PHOTONAME as dcRePhotoName,
+		DC_LIKES as dcLikes,
+		DC_REGDATE as dcRegDate,
+		DC_TYPE as dcType
+		FROM (SELECT ROW_NUMBER() OVER(ORDER BY DC_NO DESC) AS NUM,
+		DATECOURSE.*
+		FROM DATECOURSE
+		
+		<trim prefix="where" prefixOverrides="AND|OR">
+		 <if test="dcType !=null">
+		 	DC_TYPE IN 
+			<foreach collection="dcType" item="type" open="(" separator="," close=")" >
+			#{type}
+			</foreach>
+		</if>
+		<if test="dcArea !=null">
+			AND DC_AREA IN
+			<foreach collection="dcArea" item="area" open="(" separator="," close=")" >
+			#{area}
+			</foreach>
+		</if>
+			<if test ="dcCash !=null and dcCash==50000">
+			AND DC_CASH BETWEEN 0 AND 50000
+			</if>
+			
+			<if test ="dcCash !=null and dcCash==100000">
+			AND DC_CASH BETWEEN 50000 AND 100000
+			</if>
+			
+			<if test ="dcCash !=null and dcCash==150000">
+			AND DC_CASH BETWEEN 100000 AND 150000
+			</if>
+			
+			<if test ="dcCash !=null and dcCash==200000">
+			AND DC_CASH BETWEEN 150000 AND 200000
+			</if>
+			
+			<if test="selectType!=null and selectType.equals('제목')">
+			AND DC_TITLE LIKE '%'||#{searchValue}||'%'
+			</if>
+			<if test="selectType!=null and selectType.equals('내용')">
+			AND DC_CONTENT LIKE '%'||#{searchValue}||'%'
+			</if>
+			</trim>
+		)
+		WHERE NUM BETWEEN #{start} AND #{end}
+	</select>
+	
+	
+	<select id="searchCount" resultType="_int">
+
+		SELECT COUNT(*) AS CNT FROM DATECOURSE
+
+	</select>
+	
+	<select id="count" parameterType="dc" resultType="_int">
+		SELECT COUNT(*) AS CNT FROM DATECOURSE
+		<trim prefix="where" prefixOverrides="AND|OR">
+		 <if test="dcType !=null">
+		 	DC_TYPE IN 
+			<foreach collection="dcType" item="type" open="(" separator="," close=")" >
+			#{type}
+			</foreach>
+		</if>
+		<if test="dcArea !=null">
+			AND DC_AREA IN
+			<foreach collection="dcArea" item="area" open="(" separator="," close=")" >
+			#{area}
+			</foreach>
+		</if>
+			<if test ="dcCash !=null and dcCash==50000">
+			AND DC_CASH BETWEEN 0 AND 50000
+			</if>
+			
+			<if test ="dcCash !=null and dcCash==100000">
+			AND DC_CASH BETWEEN 50000 AND 100000
+			</if>
+			
+			<if test ="dcCash !=null and dcCash==150000">
+			AND DC_CASH BETWEEN 100000 AND 150000
+			</if>
+			
+			<if test ="dcCash !=null and dcCash==200000">
+			AND DC_CASH BETWEEN 150000 AND 200000
+			</if>
+			
+			<if test="selectType!=null and selectType.equals('제목')">
+			AND DC_TITLE LIKE '%'||#{searchValue}||'%'
+			</if>
+			<if test="selectType!=null and selectType.equals('내용')">
+			AND DC_CONTENT LIKE '%'||#{searchValue}||'%'
+			</if>
+			</trim>
+	</select>
+
+	<select id="selectDateCourseContent" parameterType="_int"
+		resultType="dc">
+		SELECT
+		DC_NO as dcNo,
+		DC_TITLE as dcTitle,
+		WRITER_ID as writerId,
+		DC_CONTENT as dcContent,
+		DC_AREA as dcArea,
+		DC_CASH as dcCash,
+		DC_VIEWS as dcViews,
+		DC_PLACE as dcPlace,
+		DC_ORI_PHOTONAME as dcOriPhotoName,
+		DC_RE_PHOTONAME as dcRePhotoName,
+		DC_LIKES as dcLikes,
+		DC_REGDATE as dcRegDate,
+		DC_TYPE as dcType
+		FROM DATECOURSE
+		WHERE DC_NO =#{_parameter}
+	</select>
+
+	<update id="updateDateCourseContent" parameterType="dc">
+
+		UPDATE DATECOURSE SET
+		DC_TITLE = #{dcTitle},
+		DC_CASH = #{dcCash},
+		DC_TYPE = #{dcType},
+		DC_PLACE = #{dcPlace},
+		DC_AREA = #{dcArea},
+		DC_CONTENT = #{dcContent},
+		DC_ORI_PHOTONAME =#{dcOriPhotoName},
+		DC_RE_PHOTONAME= #{dcRePhotoName}
+		WHERE DC_NO = #{dcNo}
+
+	</update>
+
+	<delete id="deleteDateCourseContent" parameterType="_int">
+
+		DELETE FROM DATECOURSE WHERE DC_NO = #{_parameter}
+
+	</delete>
+
+	<select id="searchDateCourse" parameterType="dc" resultType="dc">
+		SELECT
+		DC_NO as dcNo,
+		DC_TITLE as dcTitle,
+		WRITER_ID as writerId,
+		DC_CONTENT as dcContent,
+		DC_AREA as dcArea,
+		DC_CASH as dcCash,
+		DC_VIEWS as dcViews,
+		DC_PLACE as dcPlace,
+		DC_ORI_PHOTONAME as dcOriPhotoName,
+		DC_RE_PHOTONAME as dcRePhotoName,
+		DC_LIKES as dcLikes,
+		DC_REGDATE as dcRegDate,
+		DC_TYPE as dcType
+		FROM DATECOURSE
+		WHERE DC_TITLE LIKE '%'||#{dcTitle}||'%'
+
+	</select>
+	
+	<update id="updateDcViews" parameterType="_int">
+		  UPDATE DATECOURSE 
+		  SET DC_VIEWS = DC_VIEWS+1 
+		  WHERE DC_NO= #{_parameter} 
+	</update>
+	
+	<select id="selectOneLike" parameterType="org.kh.datecourse.model.vo.Like" resultType="org.kh.datecourse.model.vo.Like">
+		SELECT
+			MEMBER_ID as memberId,
+			DC_NO as dcNo
+		FROM DATECOURSE_LIKE
+		WHERE MEMBER_ID = #{memberId} AND DC_NO = #{dcNo}
+	</select>
+	
+	<insert id="insertLikeMemberInfo" parameterType="org.kh.datecourse.model.vo.Like">
+		INSERT INTO DATECOURSE_LIKE VALUES(
+			#{dcNo},#{memberId}
+		)
+	</insert>
+	
+	<delete id="deleteLikeMemberInfo" parameterType="org.kh.datecourse.model.vo.Like">
+		DELETE FROM DATECOURSE_LIKE WHERE DC_NO = #{dcNo} and MEMBER_ID = #{memberId}
+	</delete>
+	
+	<update id="updateLikes" parameterType="org.kh.datecourse.model.vo.Like">
+		UPDATE DATECOURSE SET
+			DC_LIKES = DC_LIKES+1
+		WHERE DC_NO = #{dcNo}
+	</update>
+	
+	<update id="deleteLikes" parameterType="org.kh.datecourse.model.vo.Like">
+		UPDATE DATECOURSE SET
+			DC_LIKES = DC_LIKES-1
+		WHERE DC_NO = #{dcNo}
+	</update>
+	
+	<select id="selectType" parameterType="org.kh.datecourse.model.vo.CheckSearchInfo" 
+	resultType="dc">
+		SELECT
+		DC_NO as dcNo,
+		DC_TITLE as dcTitle,
+		WRITER_ID as writerId,
+		DC_CONTENT as dcContent,
+		DC_AREA as dcArea,
+		DC_CASH as dcCash,
+		DC_VIEWS as dcViews,
+		DC_PLACE as dcPlace,
+		DC_ORI_PHOTONAME as dcOriPhotoName,
+		DC_RE_PHOTONAME as dcRePhotoName,
+		DC_LIKES as dcLikes,
+		DC_REGDATE as dcRegDate,
+		DC_TYPE as dcType
+		FROM (SELECT ROW_NUMBER() OVER(ORDER BY DC_NO DESC) AS NUM,
+		DATECOURSE.*
+		FROM DATECOURSE
+		WHERE DC_TYPE IN 
+		<foreach collection="dcType" item="type" open="(" separator="," close=")" >
+			#{type}
+		</foreach>
+		AND DC_AREA IN
+		<foreach collection="dcArea" item="area" open="(" separator="," close=")" >
+			#{area}
+		</foreach>
+	
+			<if test ="dcCash !=null and dcCash==50000">
+			AND DC_CASH BETWEEN 0 AND 50000
+			</if>
+			
+			<if test ="dcCash !=null and dcCash==100000">
+			AND DC_CASH BETWEEN 50000 AND 100000
+			</if>
+			
+			<if test ="dcCash !=null and dcCash==150000">
+			AND DC_CASH BETWEEN 100000 AND 150000
+			</if>
+			
+			<if test ="dcCash !=null and dcCash==200000">
+			AND DC_CASH BETWEEN 150000 AND 200000
+			</if>
+		)
+		WHERE NUM BETWEEN #{start} AND #{end}
+		</select>		
+				
+	
+	<select id="checkSearchInfoCount"
+	 parameterType="org.kh.datecourse.model.vo.CheckSearchInfo" resultType="_int">
+	
+		SELECT COUNT(*) AS CNT FROM DATECOURSE
+		WHERE DC_TYPE IN 
+		
+		<foreach collection="dcType" item="type" open="(" separator="," close=")" >
+			#{type}
+		</foreach>
+		AND DC_AREA IN
+		
+		<foreach collection="dcArea" item="area" open="(" separator="," close=")" >
+			#{area}
+		</foreach>
+	
+		<if test ="dcCash !=null and dcCash==50000">
+		AND DC_CASH BETWEEN 0 AND 50000
+		</if>
+			
+		<if test ="dcCash !=null and dcCash==100000">
+		AND DC_CASH BETWEEN 50000 AND 100000
+		</if>
+			
+		<if test ="dcCash !=null and dcCash==150000">
+		AND DC_CASH BETWEEN 100000 AND 150000
+		</if>
+			
+		<if test ="dcCash !=null and dcCash==200000">
+		AND DC_CASH BETWEEN 150000 AND 200000
+		</if>
+		
+	</select>
+	
+	<delete id="removePicture" parameterType="_int">
+		DELETE FROM DATECOURSE WHERE DC_NO = #{_parameter}
+	</delete>
+	
+	<select id="selectDateCourseDcNo" parameterType="dc" resultType="_int">
+		SELECT
+			DC_NO AS dcNo
+		FROM DATECOURSE
+		WHERE WRITER_ID=#{writerId } AND DC_CONTENT=#{dcContent } AND DC_TITLE=#{dcTitle }
+	</select>
+	
+	<insert id="insertCommentPhoto" parameterType="org.kh.datecourse.model.vo.DateCoursePhoto">
+		INSERT INTO DATECOURSE_PHOTO VALUES(#{dcNo}, #{photoName})
+	</insert>
+	
+	<select id="selectDateCourseNoPhotoSearch" parameterType="_int" resultType="String">
+		SELECT
+			PHOTONAME
+		FROM DATECOURSE_PHOTO
+		WHERE DC_NO=#{_parameter }
+	</select>
+	
+	<delete id="contentPhotoRemove" parameterType="string">
+		DELETE FROM DATECOURSE_PHOTO
+		WHERE PHOTONAME = #{_parameter}
+	</delete>
+	
+</mapper>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="myStyle">
+<insert id="insertMyStyle" parameterType="ms">
+ insert into myType values(
+ #{memberId},
+ #{bloodType},
+ #{drinkCount},
+ #{smoking},
+ #{association},
+ #{height},
+ #{form},
+ #{style01},
+ #{style02},
+ #{yn01},
+ #{yn02},
+ #{yn03},
+ #{yn04},
+ #{yn05},
+ #{yn06},
+ #{yn07},
+ #{yn08},
+ #{yn09},
+ #{yn10},
+ #{yn11},
+ #{yn12},
+ #{memberGender}
+ )
+
+
+
+
+
+</insert>
+ 
+  <select id="selectMyStyle" parameterType="ms" resultType="ms">
+ select 
+ 	member_id as memberId,
+ 	blood_type as bloodType,
+ 	drink_count as drinkCount,
+ 	smoking,
+ 	association,
+ 	height,
+ 	form,
+ 	style01,
+ 	style02,
+ 	yn01,
+ 	yn02, 
+ 	yn03,
+ 	yn04,
+ 	yn05,
+ 	yn06,
+ 	yn07,
+ 	yn08,
+ 	yn09,
+ 	yn10,
+ 	yn11,
+ 	yn12,
+ 	member_gender AS memberGender
+ 	 from myType where member_id=#{memberId}
+ </select>
+ 
+ 
+<select id="mystyleall" parameterType="ms" resultType="ms">
+
+SELECT 
+MEMBER_ID AS memberId,
+BLOOD_TYPE AS bloodType,
+DRINK_COUNT AS drinkCount,
+SMOKING AS smoking,
+ASSOCIATION AS association,
+HEIGHT AS height,
+FORM AS form,
+STYLE01 AS style01,
+STYLE02 AS style02,
+YN01 AS yn01,
+YN02 AS yn02,
+YN03 AS yn03,
+YN04 AS yn04,
+YN05 AS yn05,
+YN06 AS yn06,
+YN07 AS yn07,
+YN08 AS yn08,
+YN09 AS yn09,
+YN10 AS yn10,
+YN11 AS yn11,
+YN12 AS yn12,
+MEMBER_GENDER AS memberGender
+FROM MYTYPE
+ 	
+
+
+</select>
+<select id="selectMemberInfo" parameterType="ms" resultType="m">
+select 
+			MEMBER_ID AS memberId,
+			MEMBER_PW AS memberPw,
+			MEMBER_NAME AS memberName,
+			MEMBER_NICKNAME AS memberNickName,
+			MEMBER_ADDR AS memberAddr,
+			MEMBER_ADDR AS memberAddr2,
+			MEMBER_ADDR AS memberAddr3,
+			MEMBER_ADDR AS memberAddr4,
+			MEMBER_EMAIL AS memberEmail,
+			MEMBER_PHONE AS memberPhone,
+			MEMBER_BIRTH AS memberBirth,
+			MEMBER_TYPE AS memberType,
+			MEMBER_GENDER AS memberGender,
+			MEMBER_ORI_PHOTONAME AS memberOriPhotoName,
+			MEMBER_RE_PHOTONAME AS memberRePhotoName,
+			MEMBER_NO AS memberNo
+from member
+where member_id = #{memberId}
+</select>
+
+<update id="updateMyStyle" parameterType="ms">
+ 	update myType set
+	member_id = #{memberId},
+	blood_type = #{bloodType},
+	drink_count = #{drinkCount},
+	smoking = #{smoking},
+	association = #{association},
+	height = #{height},
+	form = #{form},
+	style01 = #{style01},
+	style02 = #{style02},
+	yn01 = #{yn01},
+	yn02 = #{yn02},
+	yn03 = #{yn03},
+	yn04 = #{yn04},
+	yn05 = #{yn05},
+	yn06 = #{yn06},
+	yn07 = #{yn07},
+	yn08 = #{yn08},
+	yn09 = #{yn09},
+	yn10 = #{yn10},
+	yn11 = #{yn11},
+	yn12 = #{yn12},
+	member_gender=#{memberGender}
+	where member_id = #{memberId}
+ </update> 
+ 
+
+
+
+ 
+</mapper>
